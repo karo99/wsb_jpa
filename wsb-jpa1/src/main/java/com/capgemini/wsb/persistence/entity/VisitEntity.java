@@ -1,13 +1,9 @@
 package com.capgemini.wsb.persistence.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "VISIT")
@@ -21,6 +17,17 @@ public class VisitEntity {
 
 	@Column(nullable = false)
 	private LocalDateTime time;
+
+
+	// relacja dwustronna wizyta-doktor
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "DOCTOR_ID", nullable = false)
+	private DoctorEntity doctorEntity;
+
+	// relacja jednokierunkowa od strony wizyty
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "VISIT_ID", nullable = false)
+	private List<MedicalTreatmentEntity> medicalTreatmentEntity;
 
 	public Long getId() {
 		return id;
@@ -46,4 +53,20 @@ public class VisitEntity {
 		this.time = time;
 	}
 
+	public DoctorEntity getDoctorEntity() {
+		return doctorEntity;
+	}
+
+	public void setDoctorEntity(DoctorEntity doctorEntity) {
+		this.doctorEntity = doctorEntity;
+	}
+
+
+	public List<MedicalTreatmentEntity> getMedicalTreatmentEntity() {
+		return medicalTreatmentEntity;
+	}
+
+	public void setMedicalTreatmentEntity(List<MedicalTreatmentEntity> medicalTreatmentEntity) {
+		this.medicalTreatmentEntity = medicalTreatmentEntity;
+	}
 }

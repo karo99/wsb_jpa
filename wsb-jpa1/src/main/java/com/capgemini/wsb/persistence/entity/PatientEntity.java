@@ -1,13 +1,10 @@
 package com.capgemini.wsb.persistence.entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "PATIENT")
@@ -33,6 +30,19 @@ public class PatientEntity {
 
 	@Column(nullable = false)
 	private LocalDate dateOfBirth;
+
+	@Column(nullable = false)
+	private boolean isNewPatient;
+
+	// relacja jednokierunkowa ze strony pacjenta
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "ADDRESS_ID", nullable = false)
+	private AddressEntity addressEntity;
+
+	// relacja dwustronna pacjent-wizyta
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "PATIENT_ID")
+	private List<VisitEntity> visitEntities = new ArrayList<>();
 
 	public Long getId() {
 		return id;
@@ -90,4 +100,27 @@ public class PatientEntity {
 		this.dateOfBirth = dateOfBirth;
 	}
 
+	public AddressEntity getAddressEntity() {
+		return addressEntity;
+	}
+
+	public void setAddressEntity(AddressEntity addressEntity) {
+		this.addressEntity = addressEntity;
+	}
+
+	public List<VisitEntity> getVisitEntities() {
+		return visitEntities;
+	}
+
+	public void setVisitEntities(List<VisitEntity> visitEntities) {
+		this.visitEntities = visitEntities;
+	}
+
+	public boolean isNewPatient() {
+		return isNewPatient;
+	}
+
+	public void setNewPatient(boolean newPatient) {
+		isNewPatient = newPatient;
+	}
 }
